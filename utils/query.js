@@ -23,5 +23,13 @@ module.exports = {
 
   deptBudget: function() {
     return queries.deptBudget
+  },
+
+  roles: function () {
+    return `SELECT * FROM role WHERE department_id = ?`
+  },
+
+  employees: function () {
+    return `SELECT * FROM employee WHERE role_id = ?`
   }
 }

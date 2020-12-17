@@ -4,6 +4,7 @@ An easy to use interaction with MySQL database to manage employee names, roles, 
 ## Installation
 * `cd` into your desired directory
 * `git clone https://github.com/nickgraffis/employee-management-system.git`
+* `npm install`
 * Edit your .env.EXAMPLE file to depict your desired MySQL credentials, and remove the .EXAMPLE extension
 * `npm run go`
 

@@ -3,12 +3,7 @@ const connection = require("../config/connection.js")
 const chalk = require('chalk')
 const requiredTables = ['employee', 'department', 'role']
 const queries = require('./queries.js')
-
-async function asyncForEach(array, callback) {
-  for (let i = 0; i < array.length; i++) {
-    await callback(array[i], i, array);
-  }
-}
+const $ = require('./helpers.js')
 
 function checkTable (table) {
   return new Promise((resolve, reject) => {
@@ -17,6 +12,7 @@ function checkTable (table) {
         console.log(chalk.red(err));
         if(err == 'Error: Cannot enqueue Query after fatal error.') {
           console.log(chalk.yellow('This probably means your database credentials are inaccurate, check your .env file!'))
+          console.log(chalk.yellow(`It is also possible that the database ${process.env.DB_NAME} does not exist in your server!`))
         }
       } else {
         if (res.length > 0) {
@@ -40,7 +36,7 @@ function checkTable (table) {
 module.exports = {
   tables: async function () {
     console.log(chalk.magenta('Welcome to Employee Management System! Let\'s check your database!'))
-    await asyncForEach(requiredTables, async function (table) {
+    await $.asyncForEach(requiredTables, async function (table) {
       console.log(chalk.blue(`Checking if ${table} table exists...`))
       await checkTable(table)
     })
