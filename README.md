@@ -14,7 +14,11 @@ Once the database is partitioned properly you will be prompted a list of options
 
 ## Demos
 
-## Creating from scratch
+### Creating from scratch
 <img src="assets/demo_from_start.gif" />
 
-## Common errors
+### Tooling around
+<img src="assets/demo_from_seeds.gif" />
+
+### Common errors
+Error handling tries to provide something as helpful as possible. The biggest error by far is <strong> not properly updating your .env file</strong>!
