@@ -28,11 +28,16 @@ class Prompt {
   }
 
   createEmployee() {
-    return prompts.createEmployee
+    let createEmployeePrompt = prompts.createEmployee
+    createEmployeePrompt.push(this.readRoles()[0])
+    createEmployeePrompt.push(this.readManagers()[0])
+    return createEmployeePrompt
   }
 
   createRole() {
-    return prompts.createRole
+    let createRolePrompt = prompts.createRole
+    createRolePrompt.push(this.readDepartments()[0])
+    return createRolePrompt
   }
 
   createDepartment() {

@@ -10,9 +10,10 @@ module.exports = {
         "View Employees by Manager",
         "Add a Department",
         "Add a Role",
+        "Add an Employee",
         "Remove an Employee",
         "Update an Employee's Role",
-        "Update an Empolyee's Manager",
+        "Update an Employee's Manager",
         "View Utilized Budget by Department",
         "^C (EXIT)"
       ]
@@ -20,7 +21,7 @@ module.exports = {
 
   departments: function (departments) {
       return [{
-        name: "departments",
+        name: "department",
         type: "list",
         message: "Select a department.",
         choices: departments
@@ -29,7 +30,7 @@ module.exports = {
 
   employees: function (employees) {
       return [{
-        name: "employees",
+        name: "employee",
         type: "list",
         message: "Select an employee.",
         choices: employees
@@ -47,7 +48,7 @@ module.exports = {
 
   roles: function (roles) {
     return [{
-        name: "roles",
+        name: "role",
         type: "list",
         message: "Select a role.",
         choices: roles

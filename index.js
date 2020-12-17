@@ -30,60 +30,63 @@ connection.connect((err) => {
 })
 
 async function openMenu() {
-  const Inquire = new Prompt(employees, departments, roles)
+  const Inquire = new Prompt(
+    employees.map(row => row.employee),
+    departments.map(row => row.department),
+    roles.map(row => row.role))
   const Select = new Selector(employees, departments, roles)
   const { main } = await inquirer.prompt(Inquire.main())
   let creation, update, deletion, log
   switch (main) {
     case "View All Employees":
-      await now.run(Query.all())
-      openMenu()
+      now.run(Query.all(), null, null, openMenu)
+      return
     case "View Employees by Department":
       const { department } = await inquirer.prompt(Inquire.readDepartments())
-      await now.run(Query.by('department.name'), Select.find(department))
-      openMenu()
+      now.run(Query.by('department.name'), Select.find(department), null, openMenu)
+      return
     case "View Employees by Role":
       const { role } = await inquirer.prompt(Inquire.readRoles())
-      await now.run(Query.by('role.title'), Select.find(role))
-      openMenu()
+      now.run(Query.by('role.title'), Select.find(role), null, openMenu)
+      return
     case "View Employees by Manager":
       const { manager } = await inquirer.prompt(Inquire.readManagers())
-      await now.run(Query.by("CONCAT(m.first_name,' ',m.last_name)"), Select.find(manager))
-      openMenu()
+      now.run(Query.by("CONCAT(m.first_name,' ',m.last_name)"), Select.find(manager), null, openMenu)
+      return
     case "Add an Employee":
       creation = await inquirer.prompt(Inquire.createEmployee())
       log = `Sucessfully added ${creation.first_name} ${creation.last_name}!`
-      await now.run(Query.create('employee'), Select.createEmployee(creation), log)
-      initApp()
+      now.run(Query.create('employee'), Select.createEmployee(creation), log, initApp)
+      return
     case "Add a Role":
       creation = await inquirer.prompt(Inquire.createRole())
       log = `Added new role: ${creation.title}!`
-      await now.run(Query.create('role'), Select.createRole(creation), log)
-      initApp()
+      now.run(Query.create('role'), Select.createRole(creation), log, initApp)
+      return
     case "Add a Department":
       creation = await inquirer.prompt(Inquire.createDepartment())
       log = `Added new department: ${creation.name}!`
-      await now.run(Query.create('department'), creation, log)
-      initApp()
+      now.run(Query.create('department'), creation, log, initApp)
+      return
     case "Remove an Employee":
       deletion = await inquirer.prompt(Inquire.readEmployees())
       log = `Removed ${deletion.employee}!`
-      await now.run(Query.delete(), Select.deleteEmployee(deletion), log)
-      initApp()
-    case "Update Employee Role":
+      now.run(Query.delete(), Select.deleteEmployee(deletion), log, initApp)
+      return
+    case "Update an Employee's Role":
       update = await inquirer.prompt(Inquire.updateRole())
       log = `Updated ${update.employee} with role ${update.role}!`
-      await now.run(Query.update("role_id"), Select.updateEmployeeRole(update), log)
-      initApp()
-    case "Update Employee Manager":
+      now.run(Query.update("role_id"), Select.updateEmployeeRole(update), log, initApp)
+      return
+    case "Update an Employee's Manager":
       update = await inquirer.prompt(Inquire.updateManager())
       log = `Updated ${update.employee} with manager ${update.manager}!`
-      await now.run(Query.update("manager_id"), Select.updateEmployeeManager(update), log)
-      initApp()
+      now.run(Query.update("manager_id"), Select.updateEmployeeManager(update), log, initApp)
+      return
     case "View Utilized Budget by Department":
       const { department: utilDepartment } = await inquirer.prompt(Inquire.readDepartments());
-      await now.run(Query.deptBudget(), Select.find(utilDepartment))
-      openMenu()
+      now.run(Query.deptBudget(), Select.find(utilDepartment), null, openMenu)
+      return
     default:
     connection.end()
     return
@@ -91,8 +94,8 @@ async function openMenu() {
 }
 
 async function initApp() {
-  employees = await  get.employees()
-  departments = await  get.departments()
+  employees = await get.employees()
+  departments = await get.departments()
   roles = await get.roles()
   openMenu()
 }

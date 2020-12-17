@@ -1,29 +1,40 @@
 const connection = require("../connection.js")
+
+connection.connect((err) => {
+
+})
+
 module.exports = {
   employees: function () {
-    connection.query(
-    "SELECT CONCAT(first_name,' ',last_name) AS employee, id FROM employee",
-    (err, res) => {
-      if (err) throw err
-      return res
+    return new Promise((resolve, reject) => {
+      connection.query(
+      "SELECT CONCAT(first_name,' ',last_name) AS employee, id FROM employee;",
+      (err, res) => {
+        if (err) throw err
+        resolve(res)
+      })
     })
   },
 
   departments: function () {
-    connection.query(
-    "SELECT name AS department, id FROM department;",
-    (err, res) => {
-      if (err) throw err
-      return res
+    return new Promise((resolve, reject) => {
+      connection.query(
+      "SELECT name AS department, id FROM department;",
+      (err, res) => {
+        if (err) throw err
+        resolve(res)
+      })
     })
   },
 
   roles: function () {
-    connection.query(
-    "SELECT title AS role, id FROM role;",
-    (err, res) => {
-      if (err) throw err
-      return res
+    return new Promise((resolve, reject) => {
+      connection.query(
+      "SELECT title AS role, id FROM role;",
+      (err, res) => {
+        if (err) throw err
+        resolve(res)
+      })
     })
   }
 }

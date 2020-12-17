@@ -41,8 +41,8 @@ class Selector {
     return this.find(managerId, employeeId)
   }
 
-  deleteEmployee (employee) {
-    const employeeId = this.getEmployeeId(employee)
+  deleteEmployee (deletion) {
+    const employeeId = this.getEmployeeId(deletion.employee)
     return this.find(employeeId)
   }
 
@@ -52,6 +52,11 @@ class Selector {
 
   getEmployeeId (employee) {
     return this.employees.find(el => el.employee === employee).id
+  }
+
+  getManagerId (employee) {
+    const manager = this.employees.find(el => el.employee === employee)
+    return manager ? manager.id : null
   }
 
   getDeptId (department) {
