@@ -1,9 +1,5 @@
-const connection = require("../connection.js")
+const connection = require("../config/connection.js")
 const chalk = require('chalk')
-
-connection.connect((err) => {
-
-})
 
 module.exports = {
   run: function (query, selector, log, callback) {

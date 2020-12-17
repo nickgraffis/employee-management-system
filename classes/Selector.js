@@ -11,7 +11,12 @@ class Selector {
 
   createEmployee (creation) {
     const roleId = this.getRoleId(creation.role)
-    const managerId = this.getManagerId(creation.manager)
+    let managerId;
+    if (this.employees > 0) {
+      managerId = this.getManagerId(creation.manager)
+    } else {
+      managerId = 0
+    }
     return {
       first_name: creation.first_name,
       last_name: creation.last_name,

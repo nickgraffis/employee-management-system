@@ -1,2 +1,3 @@
-# employee-management-system
-CMS for employees information
+# EIS :) Employee Management System
+
+## The goal was t

@@ -1,4 +1,4 @@
-const prompts = require('./utils/prompts.js')
+const prompts = require('../utils/prompts.js')
 
 class Prompt {
   constructor (employees, departments, roles) {
@@ -30,7 +30,9 @@ class Prompt {
   createEmployee() {
     let createEmployeePrompt = prompts.createEmployee
     createEmployeePrompt.push(this.readRoles()[0])
-    createEmployeePrompt.push(this.readManagers()[0])
+    if (this.employees.length > 0) {
+      createEmployeePrompt.push(this.readManagers()[0])
+    }
     return createEmployeePrompt
   }
 
