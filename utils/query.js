@@ -13,8 +13,8 @@ module.exports = {
     return `INSERT INTO ${table} SET ?`
   },
 
-  delete: function () {
-    return "DELETE FROM employee WHERE id = ?"
+  delete: function (table) {
+    return `DELETE FROM ${table} WHERE id = ?`
   },
 
   update: function(column) {

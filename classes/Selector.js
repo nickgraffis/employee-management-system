@@ -51,6 +51,16 @@ class Selector {
     return this.just(employeeId)
   }
 
+  deleteDepartment (deletion) {
+    const departmentId = this.getDeptId(deletion.department)
+    return this.just(departmentId)
+  }
+
+  deleteRole (deletion) {
+    const roleId = this.getRoleId(deletion.role)
+    return this.just(roleId)
+  }
+
   getRoleId (role) {
     return this.roles.find(el => el.role === role).id
   }

@@ -82,7 +82,29 @@ async function openMenu() {
       }
       deletion = await inquirer.prompt(show.readEmployees())
       log = `Removed ${deletion.employee}!`
-      now.run(query.delete(), select.deleteEmployee(deletion), log, initApp)
+      now.run(query.delete('employee'), select.deleteEmployee(deletion), log, initApp)
+      return
+    case "Remove a Department":
+      if (departments.length < 1) {
+        error.message('You don\'t have any departments yet!', openMenu)
+        return
+      }
+      deletion = await inquirer.prompt(show.readDepartments())
+      proceed = await confirm(show, 'Are you sure, employees and roles in this department will be lost!');
+      if (!proceed) return openMenu();
+      log = `Removed ${deletion.department}!`
+      now.run(query.delete('department'), select.deleteDepartment(deletion), log, initApp)
+      return
+    case "Remove a Role":
+      if (roles.length < 1) {
+        error.message('You don\'t have any roles yet!', openMenu)
+        return
+      }
+      deletion = await inquirer.prompt(show.readRoles())
+      proceed = await confirm(show, 'Are you sure, employees with this role will be lost!');
+      if (!proceed) return openMenu();
+      log = `Removed ${deletion.role}!`
+      now.run(query.delete('role'), select.deleteRole(deletion), log, initApp)
       return
     case "Update an Employee's Role":
       if (employees.length < 1) {
@@ -115,6 +137,10 @@ async function openMenu() {
     return
   }
 }
+
+function confirm(show, message) {
+  return inquirer.prompt(show.confirm(message)).then(res => res.proceed);
+};
 
 async function initApp() {
   employees = await get.employees()

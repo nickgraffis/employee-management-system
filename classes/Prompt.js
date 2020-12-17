@@ -11,6 +11,14 @@ class Prompt {
     return prompts.main
   }
 
+  confirm (message) {
+    return [{
+      name: "proceed",
+      type: "confirm",
+      message
+    }]
+  }
+
   readDepartments() {
     return prompts.departments(this.departments)
   }
