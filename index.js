@@ -5,88 +5,110 @@ const now = require("./utils/querier.js")
 const get = require('./utils/getters.js')
 const query = require("./utils/query.js")
 const check = require('./utils/checker.js')
+const error = require('./utils/error.js')
 const Prompt = require("./classes/Prompt")
-const Selector = require('./classes/Selector')
-
-let employees = [];
-let departments = [];
-let roles = [];
+const selector = require('./classes/selector')
+let employees, departments, roles
 
 connection.connect((err) => {
   figlet.text('EMS : )', {
     font: 'Ghost',
-    horizontalLayout: 'default',
-    verticalLayout: 'default',
-    width: 80,
-    whitespaceBreak: true
-  }, function(err, data) {
+    width: 80
+  }, (err, data) => {
       if (err) {
           console.log('Something went wrong...')
-          console.dir(err)
           return
       }
       console.log(data)
-      check.tables(initApp)
+      check.tables().then(initApp)
   })
 })
 
 async function openMenu() {
-  const Inquire = new Prompt(
+  const show = new Prompt(
     employees.map(row => row.employee),
     departments.map(row => row.department),
     roles.map(row => row.role))
-  const Select = new Selector(employees, departments, roles)
-  const { main } = await inquirer.prompt(Inquire.main())
+  const select = new selector(employees, departments, roles)
+  const { main } = await inquirer.prompt(show.main())
   let creation, update, deletion, log
   switch (main) {
     case "View All Employees":
       now.run(query.all(), null, null, openMenu)
       return
     case "View Employees by Department":
-      const { department } = await inquirer.prompt(Inquire.readDepartments())
-      now.run(query.by('department.name'), Select.find(department), null, openMenu)
+      if (departments.length < 1) {
+        error.message('You don\'t have any departments yet!', openMenu)
+        return
+      }
+      const { department } = await inquirer.prompt(show.readDepartments())
+      now.run(query.by('department.name'), select.just(department), null, openMenu)
       return
     case "View Employees by Role":
-      const { role } = await inquirer.prompt(Inquire.readRoles())
-      now.run(query.by('role.title'), Select.find(role), null, openMenu)
+      if (roles.length < 1) {
+        error.message('You don\'t have any roles yet!', openMenu)
+        return
+      }
+      const { role } = await inquirer.prompt(show.readRoles())
+      now.run(query.by('role.title'), select.just(role), null, openMenu)
       return
     case "View Employees by Manager":
-      const { manager } = await inquirer.prompt(Inquire.readManagers())
-      now.run(query.by("CONCAT(m.first_name,' ',m.last_name)"), Select.find(manager), null, openMenu)
+      const { manager } = await inquirer.prompt(show.readManagers())
+      now.run(query.by("CONCAT(m.first_name,' ',m.last_name)"), select.just(manager), null, openMenu)
       return
     case "Add an Employee":
-      creation = await inquirer.prompt(Inquire.createEmployee())
+      creation = await inquirer.prompt(show.createEmployee())
       log = `Sucessfully added ${creation.first_name} ${creation.last_name}!`
-      now.run(query.create('employee'), Select.createEmployee(creation), log, initApp)
+      now.run(query.create('employee'), select.createEmployee(creation), log, initApp)
       return
     case "Add a Role":
-      creation = await inquirer.prompt(Inquire.createRole())
+      if (departments.length < 1) {
+        error.message('You don\'t have any departments yet!', openMenu)
+        return
+      }
+      creation = await inquirer.prompt(show.createRole())
       log = `Added new role: ${creation.title}!`
-      now.run(query.create('role'), Select.createRole(creation), log, initApp)
+      now.run(query.create('role'), select.createRole(creation), log, initApp)
       return
     case "Add a Department":
-      creation = await inquirer.prompt(Inquire.createDepartment())
+      creation = await inquirer.prompt(show.createDepartment())
       log = `Added new department: ${creation.name}!`
       now.run(query.create('department'), creation, log, initApp)
       return
     case "Remove an Employee":
-      deletion = await inquirer.prompt(Inquire.readEmployees())
+      if (employees.length < 1) {
+        error.message('You don\'t have any employees yet!', openMenu)
+        return
+      }
+      deletion = await inquirer.prompt(show.readEmployees())
       log = `Removed ${deletion.employee}!`
-      now.run(query.delete(), Select.deleteEmployee(deletion), log, initApp)
+      now.run(query.delete(), select.deleteEmployee(deletion), log, initApp)
       return
     case "Update an Employee's Role":
-      update = await inquirer.prompt(Inquire.updateRole())
+      if (employees.length < 1) {
+        error.message('You don\'t have any employees yet!', openMenu)
+        return
+      }
+      update = await inquirer.prompt(show.updateRole())
       log = `Updated ${update.employee} with role ${update.role}!`
-      now.run(query.update("role_id"), Select.updateEmployeeRole(update), log, initApp)
+      now.run(query.update("role_id"), select.updateEmployeeRole(update), log, initApp)
       return
     case "Update an Employee's Manager":
-      update = await inquirer.prompt(Inquire.updateManager())
+      if (employees.length < 1) {
+        error.message('You don\'t have any employees yet!', openMenu)
+        return
+      }
+      update = await inquirer.prompt(show.updateManager())
       log = `Updated ${update.employee} with manager ${update.manager}!`
-      now.run(query.update("manager_id"), Select.updateEmployeeManager(update), log, initApp)
+      now.run(query.update("manager_id"), select.updateEmployeeManager(update), log, initApp)
       return
     case "View Utilized Budget by Department":
-      const { department: utilDepartment } = await inquirer.prompt(Inquire.readDepartments());
-      now.run(query.deptBudget(), Select.find(utilDepartment), null, openMenu)
+      if (departments.length < 1) {
+        error.message('You don\'t have any departments yet!', openMenu)
+        return
+      }
+      const { department: utilDepartment } = await inquirer.prompt(show.readDepartments());
+      now.run(query.deptBudget(), select.just(utilDepartment), null, openMenu)
       return
     default:
     connection.end()

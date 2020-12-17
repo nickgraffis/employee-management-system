@@ -5,7 +5,7 @@ class Selector {
     this.roles = roles
   }
 
-  find (...selector) {
+  just (...selector) {
     return selector
   }
 
@@ -37,18 +37,18 @@ class Selector {
   updateEmployeeRole (update) {
     const employeeId = this.getEmployeeId(update.employee)
     const roleId = this.getRoleId(update.role)
-    return this.find(roleId, employeeId)
+    return this.just(roleId, employeeId)
   }
 
   updateEmployeeManager (update) {
     const employeeId = this.getEmployeeId(update.employee)
     const managerId = this.getManagerId(update.manager)
-    return this.find(managerId, employeeId)
+    return this.just(managerId, employeeId)
   }
 
   deleteEmployee (deletion) {
     const employeeId = this.getEmployeeId(deletion.employee)
-    return this.find(employeeId)
+    return this.just(employeeId)
   }
 
   getRoleId (role) {
