@@ -58,3 +58,8 @@ Basic structure to interact with the database using mysql npm package.
 
 #### Optionally Log and Table
 We can add a log to be printed out, and specify weather or not a table of the response data should be printed out
+
+When you ask to "View all Employees By Role" we execute
+```javascript
+now.run(query.by('role.title'), select.just(role)).then((res) => openMenu())
+```
