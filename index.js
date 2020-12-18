@@ -33,7 +33,6 @@ async function openMenu() {
     roles.map(row => row.role))
   const select = new selector(employees, departments, roles)
   const { main } = await inquirer.prompt(show.main())
-  let command
   let creation, update, deletion, log
   switch (main) {
     case "View All Employees":

@@ -1,7 +1,7 @@
-# EIS :) Employee Management System
+# EIS :) Employee Management System 👻👻👻
 An easy to use interaction with MySQL database to manage employee names, roles, departments, managers, and salaries.
 
-## Installation
+## 🚀 Installation
 * `cd` into your desired directory
 * `git clone https://github.com/nickgraffis/employee-management-system.git`
 * `npm install`
@@ -34,7 +34,7 @@ choices: [
 ]
 ```
 
-## Demos
+## 📺 Demos
 
 ### Creating from scratch
 <img src="assets/demo_from_start.gif" />
@@ -42,5 +42,19 @@ choices: [
 ### Tooling around
 <img src="assets/demo_from_seeds.gif" />
 
-### Common errors
+## Common errors
 Error handling tries to provide something as helpful as possible. The biggest error by far is <strong> not properly updating your .env file</strong>!
+
+## 🤓 Geeking out! How it all works!
+Basic structure to interact with the database using mysql npm package.
+#### We have the run command
+`now.run(query, selectors, log, table)` -> returns a promise resolved with the response of the mysql query.
+
+#### We have the query command
+`query.by('department')` -> returns a string of SQL text
+
+#### We have the select command
+`select.just(role)` -> returns the specified selectors in an array
+
+#### Optionally Log and Table
+We can add a log to be printed out, and specify weather or not a table of the response data should be printed out
