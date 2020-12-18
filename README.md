@@ -63,3 +63,4 @@ When you ask to "View all Employees By Role" we execute
 ```javascript
 now.run(query.by('role.title'), select.just(role)).then((res) => openMenu())
 ```
+I used an async forEach loop in a couple places here. I wrote this article about how that works: [async / await in forEach loop 🤯] (https://nicholasgraffis.medium.com/async-await-in-foreach-loop-cb6e0aaadb34)
